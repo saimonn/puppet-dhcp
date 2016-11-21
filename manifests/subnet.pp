@@ -66,7 +66,7 @@ define dhcp::subnet(
   }
 
   $mysharedsubnetcontent = $is_shared ? {
-    false   => "include \"${dhcp::params::config_dir}/subnets/${name}.conf\";\n",
+    false   => "include \"${dhcp::params::config_dir}/subnets/${name}.conf\"; # not shared subnet \n",
     default => '',
   }
   concat::fragment {"dhcp.subnet.${name}":
