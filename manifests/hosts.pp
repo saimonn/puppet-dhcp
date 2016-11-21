@@ -76,11 +76,13 @@ define dhcp::hosts (
   validate_array($global_options)
   validate_string($template)
 
-  if $ensure == 'present' {
-    concat::fragment {"dhcp.host.${name}":
-      target  => "${dhcp::params::config_dir}/hosts.d/${subnet}.conf",
-      content => template($template),
-      notify  => Service['dhcpd'],
-    }
+  $mycontent =  $ensure ? {
+    'present'  => template($template),
+    default => ''
+  }
+  concat::fragment {"dhcp.host.${name}":
+    target  => "${dhcp::params::config_dir}/hosts.d/${subnet}.conf",
+    content => $mycontent,
+    notify  => Service['dhcpd'],
   }
 }

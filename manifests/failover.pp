@@ -32,11 +32,13 @@ define dhcp::failover(
     owner   => 'root',
   }
 
-  if $ensure == 'present' {
-    concat::fragment {"dhcp.failover.${name}":
-      content => "include \"${dhcp::params::config_dir}/failover.d/${name}.conf\";\n",
-      target  => "${dhcp::params::config_dir}/dhcpd.conf",
-    }
+  $mycontent = $ensure ? {
+      'present' => "include \"${dhcp::params::config_dir}/failover.d/${name}.conf\";\n",
+      default   => ''
+  }
+  concat::fragment {"dhcp.failover.${name}":
+    content => $mycontent,
+    target  => "${dhcp::params::config_dir}/dhcpd.conf",
   }
 
 }
