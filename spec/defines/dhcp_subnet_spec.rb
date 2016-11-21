@@ -189,8 +189,10 @@ describe 'dhcp::subnet' do
           :is_shared => true,
         } }
 
-        it { should_not contain_concat__fragment('dhcp.subnet.1.2.3.4')
-        }
+        it { should contain_concat__fragment('dhcp.subnet.1.2.3.4').with(
+          :target  => '/etc/dhcp/dhcpd.conf',
+          :content => ''
+        ) }
       end
 
       context 'when passing other_opts as array' do
